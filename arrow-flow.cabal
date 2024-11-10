@@ -1,0 +1,79 @@
+cabal-version:      3.0
+name:               arrow-flow
+version:            0.1.0
+synopsis:           Arrow based workflow engine abstraction
+description:
+  Please see the README on GitHub at <https://github.com/kokobd/arrow-flow>
+
+bug-reports:        https://github.com/kokobd/arrow-flow/issues
+license:            BSD-3-Clause
+author:             kokobd <contact@zelinf.net>
+maintainer:         kokobd <contact@zelinf.net>
+stability:          experimental
+copyright:          (c) 2024 kokobd
+category:           Web
+build-type:         Simple
+extra-source-files: README.md
+
+common deps
+  build-depends:
+    , aeson
+    , amazonka
+    , amazonka-dynamodb
+    , amazonka-lambda
+    , amazonka-sqs
+    , amazonka-stepfunctions
+    , async
+    , base                    >=4.17 && <5
+    , containers
+    , generic-lens
+    , hoist-error
+    , lens
+    , mtl
+    , refined
+    , relude
+
+common opts
+  default-language:   GHC2021
+  default-extensions: NoImplicitPrelude
+  ghc-options:
+    -Wall -Wcompat -Widentities -Wimplicit-prelude
+    -Wincomplete-record-updates -Wincomplete-uni-patterns
+    -Werror=incomplete-patterns -Wredundant-constraints
+    -Wpartial-fields -Wtabs -Wmissing-local-signatures -fhelpful-errors
+    -fprint-expanded-synonyms -fwarn-unused-do-bind
+
+library
+  import:          deps, opts
+
+  -- cabal-fmt: expand src/
+  exposed-modules:
+    ArrowFlow
+    ArrowFlow.Aws
+    ArrowFlow.Chain
+    ArrowFlow.Name
+
+  hs-source-dirs:  src
+
+test-suite spec
+  import:             deps, opts
+  type:               exitcode-stdio-1.0
+  ghc-options:        -threaded
+  hs-source-dirs:     test
+  main-is:            Main.hs
+
+  -- cabal-fmt: expand test/ -Main
+  other-modules:
+    ArrowFlow.ChainTest
+    ArrowFlowTest
+
+  build-depends:
+    , arrow-flow
+    , filepath
+    , pretty-simple
+    , tasty
+    , tasty-golden
+    , tasty-hedgehog
+    , tasty-hunit
+
+  build-tool-depends: tasty-discover:tasty-discover ^>=5.0.0
